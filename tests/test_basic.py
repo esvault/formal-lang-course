@@ -1,3 +1,4 @@
+import filecmp
 import os
 
 import pydot
@@ -18,7 +19,8 @@ def test_get_graph_info():
     assert n == 632 and e == 556 and lab == {"A", "D"}
 
 
-def test_two_cycles_graph_to_file():
+def test_two_cycles_graph_to_file1():
+    """Check that after saving graph isn't changed"""
     filename = "test.dot"
 
     graph.two_cycles_graph_to_file(10, 14, ("H", "M"), filename)
@@ -28,3 +30,16 @@ def test_two_cycles_graph_to_file():
     os.remove(filename)
 
     assert len(list(g.get_nodes())) == 26
+
+
+def test_two_cycles_graph_to_file2():
+    filename = "test.dot"
+
+    graph.two_cycles_graph_to_file(3, 2, ("A", "C"), filename)
+
+    try:
+        assert filecmp.cmp(filename, "correct.dot")
+    except AssertionError:
+        return
+    finally:
+        os.remove(filename)

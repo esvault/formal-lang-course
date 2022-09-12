@@ -1,5 +1,6 @@
 import cfpq_data
 import networkx as nx
+from collections import namedtuple
 
 
 def get_graph_info(name: str):
@@ -22,7 +23,9 @@ def get_graph_info(name: str):
         for j in i.values():
             s.add(j)
 
-    return graph.number_of_nodes(), graph.number_of_edges(), s
+    nt = namedtuple("graf_info", ["nodes", "edges", "labels"])
+
+    return nt(graph.number_of_nodes(), graph.number_of_edges(), s)
 
 
 def two_cycles_graph_to_file(n1: int, n2: int, labels: tuple, filename: str):
