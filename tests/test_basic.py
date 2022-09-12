@@ -21,7 +21,7 @@ def test_get_graph_info():
 
 def test_two_cycles_graph_to_file1():
     """Check that after saving graph isn't changed"""
-    filename = "test.dot"
+    filename = os.path.join("tests", "test.dot")
 
     graph.two_cycles_graph_to_file(10, 14, ("H", "M"), filename)
 
@@ -33,12 +33,12 @@ def test_two_cycles_graph_to_file1():
 
 
 def test_two_cycles_graph_to_file2():
-    filename = "test.dot"
+    filename = os.path.join("tests", "test.dot")
 
     graph.two_cycles_graph_to_file(3, 2, ("A", "C"), filename)
 
     try:
-        assert filecmp.cmp(filename, "correct.dot")
+        assert filecmp.cmp(filename, os.path.join("tests", "correct.dot"))
     except AssertionError:
         return
     finally:
