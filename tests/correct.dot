@@ -1,0 +1,15 @@
+digraph  {
+1;
+2;
+3;
+0;
+4;
+5;
+1 -> 2  [key=0, label=A];
+2 -> 3  [key=0, label=A];
+3 -> 0  [key=0, label=A];
+0 -> 1  [key=0, label=A];
+0 -> 4  [key=0, label=C];
+4 -> 5  [key=0, label=C];
+5 -> 0  [key=0, label=C];
+}
