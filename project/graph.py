@@ -2,6 +2,8 @@ import cfpq_data
 import networkx as nx
 from collections import namedtuple
 
+from pydot import Dot
+
 
 def get_graph_info(name: str):
     """Load a graph by name. Passes through it and add unique labels to set.
@@ -28,16 +30,26 @@ def get_graph_info(name: str):
     return nt(graph.number_of_nodes(), graph.number_of_edges(), s)
 
 
-def two_cycles_graph_to_file(n1: int, n2: int, labels: tuple, filename: str):
+def generate_two_cycles_graph(n1: int, n2: int, labels: tuple) -> Dot:
     """Generate two cycles graph and save it to dot file.
 
     :param n1: number of nodes in first cycle
     :param n2: number of nodes in second cycle
     :param labels: 2-tuple, where elements mark first and second cycles of graph according
-    :param filename: name of file to save
     :return: None
 
     """
     g = cfpq_data.graphs.generators.labeled_two_cycles_graph(n1, n2, labels=labels)
-    graph = nx.drawing.nx_pydot.to_pydot(g)
+    return nx.drawing.nx_pydot.to_pydot(g)
+
+
+def save_graph_to_file(graph: Dot, filename: str):
+    """
+    Save DOT format graph to file.
+
+    :param graph: Original graph
+    :param filename: Name of the file
+    :return: None
+
+    """
     graph.write(filename)
