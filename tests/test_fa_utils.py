@@ -76,3 +76,18 @@ def test_two_automata_equivalence():
 
     for word in words:
         assert test_automata.accepts(word) == automata.accepts(word)
+
+
+def test_is_minimal():
+    automata = regex_to_dfa("a.b*")
+
+    min_dfa = DeterministicFiniteAutomaton({State(0), State(1)})
+
+    min_dfa.add_start_state(State(0))
+    min_dfa.add_final_state(State(1))
+
+    min_dfa.add_transitions(
+        [(State(0), Symbol("a"), State(1)), (State(1), Symbol("b"), State(1))]
+    )
+
+    assert min_dfa.is_equivalent_to(automata)
