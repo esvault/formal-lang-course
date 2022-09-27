@@ -1,4 +1,4 @@
-from pyformlang.finite_automaton import FiniteAutomaton
+from pyformlang.finite_automaton import FiniteAutomaton, NondeterministicFiniteAutomaton
 from scipy import sparse
 
 
@@ -40,6 +40,20 @@ class BooleanDecomposition:
                     matrices[symbol][from_index, to_index] = 1
 
         return matrices
+
+    def to_nfa(self):
+        nfa = NondeterministicFiniteAutomaton()
+        for symbol, bm in self.boolean_matrices.items():
+            for first_state, second_state in zip(*bm.nonzero()):
+                nfa.add_transition(first_state, symbol, second_state)
+
+        for state in self.start_states:
+            nfa.add_start_state(state)
+
+        for state in self.final_states:
+            nfa.add_final_state(state)
+
+        return nfa
 
     def intersection(self, other):
         result = BooleanDecomposition()
