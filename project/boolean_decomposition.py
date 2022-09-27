@@ -36,7 +36,7 @@ class BooleanDecomposition:
     def get_boolean_matrices(self, automata):
         automata_dict = automata.to_dict()
         matrices = {
-            symbol: ss.lil_matrix((self.num_of_states, self.num_of_states), dtype=bool)
+            symbol: ss.csr_matrix((self.num_of_states, self.num_of_states), dtype=bool)
             for symbol in automata.symbols
         }
         for from_state, transitions in automata_dict.items():
@@ -80,6 +80,21 @@ class BooleanDecomposition:
                     result.final_states.add(state)
 
         return result
+
+    def transitive_closure(self):
+        if len(self.boolean_matrices) == 0:
+            return ss.csr_matrix((0, 0), dtype=bool)
+        closure = sum(self.boolean_matrices.values())
+
+        prev = closure.nnz
+        curr = 0
+
+        while prev != curr:
+            closure += closure @ closure
+            prev = curr
+            curr = closure.nnz
+
+        return closure
 
 
 if __name__ == "__main__":
