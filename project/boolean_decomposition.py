@@ -1,4 +1,8 @@
-from pyformlang.finite_automaton import FiniteAutomaton, NondeterministicFiniteAutomaton
+from pyformlang.finite_automaton import (
+    FiniteAutomaton,
+    NondeterministicFiniteAutomaton,
+    State,
+)
 from scipy import sparse
 
 
@@ -71,7 +75,9 @@ class BooleanDecomposition:
 
         for left_state, left_index in self.indexed_states.items():
             for right_state, right_index in other.indexed_states.items():
-                state = left_state * other.num_of_states + right_state
+                state = State(
+                    left_state.value * other.num_of_states + right_state.value
+                )
                 result.indexed_states[state] = state
 
                 if (
