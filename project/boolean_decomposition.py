@@ -1,13 +1,5 @@
-from pyformlang.finite_automaton import (
-    FiniteAutomaton,
-    DeterministicFiniteAutomaton,
-    State,
-    Symbol,
-    NondeterministicFiniteAutomaton,
-)
-
-import scipy.sparse as ss
-import numpy as np
+from pyformlang.finite_automaton import FiniteAutomaton
+from scipy import sparse
 
 
 class BooleanDecomposition:
@@ -23,8 +15,6 @@ class BooleanDecomposition:
                 state: index for index, state in enumerate(self.states)
             }
             self.boolean_matrices = self.get_boolean_matrices(automata)
-            print(automata.to_dict())
-
         else:
             self.states = set()
             self.start_states = set()
@@ -36,9 +26,12 @@ class BooleanDecomposition:
     def get_boolean_matrices(self, automata):
         automata_dict = automata.to_dict()
         matrices = {
-            symbol: ss.csr_matrix((self.num_of_states, self.num_of_states), dtype=bool)
+            symbol: sparse.csr_matrix(
+                (self.num_of_states, self.num_of_states), dtype=bool
+            )
             for symbol in automata.symbols
         }
+
         for from_state, transitions in automata_dict.items():
             for symbol, to_states in transitions.items():
                 for to_state in to_states:
@@ -54,7 +47,7 @@ class BooleanDecomposition:
         symbols = self.boolean_matrices.keys() & other.boolean_matrices.keys()
 
         for symbol in symbols:
-            result.boolean_matrices[symbol] = ss.kron(
+            result.boolean_matrices[symbol] = sparse.kron(
                 self.boolean_matrices[symbol],
                 other.boolean_matrices[symbol],
                 format="lil",
@@ -83,7 +76,7 @@ class BooleanDecomposition:
 
     def transitive_closure(self):
         if len(self.boolean_matrices) == 0:
-            return ss.csr_matrix((0, 0), dtype=bool)
+            return sparse.csr_matrix((0, 0), dtype=bool)
         closure = sum(self.boolean_matrices.values())
 
         prev = closure.nnz
@@ -95,30 +88,3 @@ class BooleanDecomposition:
             curr = closure.nnz
 
         return closure
-
-
-if __name__ == "__main__":
-    min_dfa = NondeterministicFiniteAutomaton({State(0), State(1), State(2)})
-
-    min_dfa.add_start_state(State(0))
-    min_dfa.add_final_state(State(1))
-
-    min_dfa.add_transitions(
-        [
-            (State(0), Symbol("a"), State(1)),
-            (State(1), Symbol("b"), State(1)),
-            (State(0), Symbol("b"), State(1)),
-            (State(0), Symbol("a"), State(2)),
-        ]
-    )
-
-    dfa = NondeterministicFiniteAutomaton()
-    dfa.add_transitions([(State(0), Symbol("a"), State(0))])
-
-    bd = BooleanDecomposition(min_dfa)
-    bd2 = BooleanDecomposition(dfa)
-
-    bd.intersection(bd2)
-    for symbol, matrix in bd.boolean_matrices.items():
-        print(symbol, matrix.toarray())
-    print("main")
