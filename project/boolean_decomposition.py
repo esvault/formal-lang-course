@@ -4,7 +4,9 @@ from scipy import sparse
 
 
 class BooleanDecomposition:
-    """ """
+    """
+    This class is representation of graph as set of boolean matrices.
+    """
 
     def __init__(self, automata: EpsilonNFA = None):
         if automata is not None:
@@ -15,7 +17,7 @@ class BooleanDecomposition:
             self.indexed_states = {
                 state: index for index, state in enumerate(self.states)
             }
-            self.boolean_matrices = self.get_boolean_matrices(automata)
+            self.boolean_matrices = self._get_boolean_matrices(automata)
         else:
             self.states = set()
             self.start_states = set()
@@ -24,7 +26,14 @@ class BooleanDecomposition:
             self.indexed_states = dict()
             self.boolean_matrices = dict()
 
-    def get_boolean_matrices(self, automata):
+    def _get_boolean_matrices(self, automata) -> dict:
+        """
+        Service function for building boolean matrices.
+
+        :param automata: Origin automaton
+        :return: Dict of boolean matrices
+        """
+
         matrices = dict()
 
         for from_state, transitions in automata.to_dict().items():
@@ -42,7 +51,12 @@ class BooleanDecomposition:
 
         return matrices
 
-    def to_nfa(self):
+    def to_nfa(self) -> NondeterministicFiniteAutomaton:
+        """
+        Convert dict of boolean matrices to nfa
+        :return: Nfa
+        """
+
         nfa = NondeterministicFiniteAutomaton()
         for symbol, bm in self.boolean_matrices.items():
             for first_state, second_state in zip(*bm.nonzero()):
@@ -57,6 +71,13 @@ class BooleanDecomposition:
         return nfa
 
     def intersection(self, other):
+        """
+        Intersect two automaton using kronecker product.
+
+        :param other: Right operand of kronecker product
+        :return: Resulting automaton as BooleanDecomposition
+        """
+
         result = BooleanDecomposition()
 
         symbols = self.boolean_matrices.keys() & other.boolean_matrices.keys()
@@ -90,6 +111,11 @@ class BooleanDecomposition:
         return result
 
     def transitive_closure(self):
+        """
+        Get transitive closure of BooleanDecomposition
+        :return: Transitive closure
+        """
+
         if len(self.boolean_matrices) == 0:
             return sparse.csr_matrix((0, 0), dtype=bool)
         closure = sum(self.boolean_matrices.values())
