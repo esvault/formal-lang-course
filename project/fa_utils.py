@@ -1,11 +1,8 @@
-from typing import Optional, AbstractSet
-
 from pyformlang.regular_expression import Regex
 from pyformlang.finite_automaton import DeterministicFiniteAutomaton
 from pyformlang.finite_automaton import NondeterministicFiniteAutomaton
 from pyformlang.finite_automaton import EpsilonNFA
-from pyformlang.finite_automaton import State
-from networkx import Graph
+from networkx import MultiGraph
 
 
 def regex_to_dfa(regex: str) -> DeterministicFiniteAutomaton:
@@ -18,13 +15,13 @@ def regex_to_dfa(regex: str) -> DeterministicFiniteAutomaton:
 
     re = Regex(regex)
     eps_nfa: EpsilonNFA = re.to_epsilon_nfa()
-    return eps_nfa.to_deterministic().minimize()
+    return eps_nfa.minimize()
 
 
 def graph_to_epsilon_nfa(
-    graph: Graph,
-    start_states: Optional[AbstractSet[State]] = None,
-    finale_states: Optional[AbstractSet[State]] = None,
+    graph: MultiGraph,
+    start_states: set = None,
+    finale_states: set = None,
 ) -> EpsilonNFA:
     """
     Transform the networkx graph to the Nondeterministic finite automation.
