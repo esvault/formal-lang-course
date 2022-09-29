@@ -1,15 +1,12 @@
-from pyformlang.finite_automaton import (
-    FiniteAutomaton,
-    NondeterministicFiniteAutomaton,
-    State,
-)
+from pyformlang.finite_automaton import NondeterministicFiniteAutomaton, EpsilonNFA
+
 from scipy import sparse
 
 
 class BooleanDecomposition:
     """ """
 
-    def __init__(self, automata: FiniteAutomaton = None):
+    def __init__(self, automata: EpsilonNFA = None):
         if automata is not None:
             self.states = automata.states
             self.start_states = automata.start_states
@@ -28,20 +25,20 @@ class BooleanDecomposition:
             self.boolean_matrices = dict()
 
     def get_boolean_matrices(self, automata):
-        automata_dict = automata.to_dict()
-        matrices = {
-            symbol: sparse.csr_matrix(
-                (self.num_of_states, self.num_of_states), dtype=bool
-            )
-            for symbol in automata.symbols
-        }
+        matrices = dict()
 
-        for from_state, transitions in automata_dict.items():
+        for from_state, transitions in automata.to_dict().items():
             for symbol, to_states in transitions.items():
+                if not isinstance(to_states, set):
+                    to_states = {to_states}
                 for to_state in to_states:
                     from_index = self.indexed_states[from_state]
                     to_index = self.indexed_states[to_state]
-                    matrices[symbol][from_index, to_index] = 1
+                    if symbol not in matrices:
+                        matrices[symbol] = sparse.csr_matrix(
+                            (self.num_of_states, self.num_of_states), dtype=bool
+                        )
+                    matrices[symbol][from_index, to_index] = True
 
         return matrices
 
@@ -68,16 +65,14 @@ class BooleanDecomposition:
             result.boolean_matrices[symbol] = sparse.kron(
                 self.boolean_matrices[symbol],
                 other.boolean_matrices[symbol],
-                format="lil",
+                format="csr",
             )
 
         result.num_of_states = self.num_of_states * other.num_of_states
 
         for left_state, left_index in self.indexed_states.items():
             for right_state, right_index in other.indexed_states.items():
-                state = State(
-                    left_state.value * other.num_of_states + right_state.value
-                )
+                state = left_index * other.num_of_states + right_index
                 result.indexed_states[state] = state
 
                 if (

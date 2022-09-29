@@ -11,10 +11,10 @@ from project.fa_utils import graph_to_epsilon_nfa, regex_to_dfa
 def request_path_query(
     regex: str,
     graph: MultiGraph,
-    start_states: Optional[AbstractSet[State]] = None,
-    finale_states: Optional[AbstractSet[State]] = None,
+    start_nodes: set = None,
+    final_nodes: set = None,
 ):
-    graph_fa = graph_to_epsilon_nfa(graph, start_states, finale_states)
+    graph_fa = graph_to_epsilon_nfa(graph, start_nodes, final_nodes)
     regex_fa = regex_to_dfa(regex)
 
     graph_bd = BooleanDecomposition(graph_fa)
@@ -22,8 +22,8 @@ def request_path_query(
 
     intersection = graph_bd.intersection(regex_bd)
 
-    start_states = graph_bd.start_states
-    final_states = graph_bd.final_states
+    start_states = intersection.start_states
+    final_states = intersection.final_states
 
     closure = intersection.transitive_closure()
 
