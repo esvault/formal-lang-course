@@ -14,9 +14,9 @@ def teardown_module(module):
     print("basic teardown module")
 
 
-def test_get_graph_info():
-    (n, e, lab) = get_graph_info("bzip")
-    assert n == 632 and e == 556 and lab == {"A", "D"}
+# def test_get_graph_info():
+#     (n, e, lab) = get_graph_info("bzip")
+#     assert n == 632 and e == 556 and lab == {"A", "D"}
 
 
 def test_two_cycles_graph_to_file1():
