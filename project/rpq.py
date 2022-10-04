@@ -38,3 +38,21 @@ def request_path_query(
             )
 
     return result
+
+
+def rpq_bfs(
+    regex: str,
+    graph: MultiGraph,
+    start_nodes: set,
+    final_nodes: set,
+    is_separated: bool,
+):
+    graph_fa = graph_to_epsilon_nfa(graph, start_nodes, final_nodes)
+    regex_fa = regex_to_dfa(regex)
+
+    graph_bd = BooleanDecomposition(graph_fa)
+    regex_bd = BooleanDecomposition(regex_fa)
+
+    result = graph_bd.constraint_bfs(regex_bd, is_separated)
+
+    return result
