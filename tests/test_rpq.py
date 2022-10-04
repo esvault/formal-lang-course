@@ -1,7 +1,7 @@
 from networkx import MultiGraph
 from pyformlang.finite_automaton import State
 
-from project.rpq import request_path_query
+from project.rpq import request_path_query, rpq_bfs
 
 
 def generate_graph():
@@ -31,3 +31,35 @@ def test_empty_regex():
     regex = ""
 
     assert request_path_query(regex, graph) == set()
+
+
+def graph1():
+    graph = MultiGraph()
+    graph.add_edges_from(
+        [
+            (0, 1, {"label": "c"}),
+            (0, 2, {"label": "a"}),
+            (1, 2, {"label": "a"}),
+            (2, 2, {"label": "b"}),
+        ]
+    )
+
+    return graph
+
+
+def test_rpq_bfs_common():
+    graph = graph1()
+    regex = "a.b*"
+
+    result = rpq_bfs(regex, graph, {0}, {2}, False)
+
+    assert result == {2}
+
+
+def test_rpq_bfs_separated():
+    graph = graph1()
+    regex = "a.b*"
+
+    result = rpq_bfs(regex, graph, {0, 1}, {2}, True)
+
+    assert result == {(0, 2), (1, 2)}
