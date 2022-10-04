@@ -47,6 +47,17 @@ def rpq_bfs(
     final_nodes: set,
     is_separated: bool,
 ):
+    """
+    The function of performing regular queries to graph.
+
+    :param regex: constraint regular expression
+    :param graph: origin graph
+    :param start_nodes: set of start nodes
+    :param final_nodes: set of final nodes
+    :param is_separated: separated: True if you want to get final vertices for every start vertex,
+            False --- to get set of final vertices reachable from set of start vertices.
+    :return: Reachable vertices.
+    """
     graph_fa = graph_to_epsilon_nfa(graph, start_nodes, final_nodes)
     regex_fa = regex_to_dfa(regex)
 

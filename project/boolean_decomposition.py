@@ -181,6 +181,14 @@ class BooleanDecomposition:
         return result
 
     def constraint_bfs(self, constraint: "BooleanDecomposition", separated: bool):
+        """
+        Traverse presented graph via BFS with matrix operations and with constraint.
+
+        :param constraint: constraint regular expression.
+        :param separated: True if you want to get final vertices for every start vertex, False --- to get set of final
+                vertices reachable from set of start vertices.
+        :return: Reachable vertices.
+        """
         k = constraint.num_of_states
         n = self.num_of_states
 
