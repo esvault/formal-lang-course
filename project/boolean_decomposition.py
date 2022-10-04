@@ -188,6 +188,14 @@ class BooleanDecomposition:
             i for i, st in enumerate(self.states) if st in self.start_states
         ]
 
+        final_states_indices = [
+            i for i, st in enumerate(self.states) if st in self.final_states
+        ]
+
+        constraint_final_state_indices = [
+            i for i, st in enumerate(constraint.states) if st in constraint.final_states
+        ]
+
         direct_sum = constraint._direct_matrix_sum(self)
 
         front = (
@@ -216,8 +224,8 @@ class BooleanDecomposition:
 
         result = set()
         for i, j in zip(*visited.nonzero()):
-            if j >= k and constraint.indexed_states[i % k] in constraint.final_states:
-                if self.indexed_states[j - k] in self.final_states:
+            if j >= k and i % k in constraint_final_state_indices:
+                if j - k in final_states_indices:
                     result.add(
                         j - k
                         if not separated
