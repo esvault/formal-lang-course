@@ -38,3 +38,32 @@ def request_path_query(
             )
 
     return result
+
+
+def rpq_bfs(
+    regex: str,
+    graph: MultiGraph,
+    start_nodes: set,
+    final_nodes: set,
+    is_separated: bool,
+):
+    """
+    The function of performing regular queries to graph.
+
+    :param regex: constraint regular expression
+    :param graph: origin graph
+    :param start_nodes: set of start nodes
+    :param final_nodes: set of final nodes
+    :param is_separated: separated: True if you want to get final vertices for every start vertex,
+            False --- to get set of final vertices reachable from set of start vertices.
+    :return: Reachable vertices.
+    """
+    graph_fa = graph_to_epsilon_nfa(graph, start_nodes, final_nodes)
+    regex_fa = regex_to_dfa(regex)
+
+    graph_bd = BooleanDecomposition(graph_fa)
+    regex_bd = BooleanDecomposition(regex_fa)
+
+    result = graph_bd.constraint_bfs(regex_bd, is_separated)
+
+    return result
