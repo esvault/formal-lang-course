@@ -34,7 +34,6 @@ class BooleanDecomposition:
     def _get_boolean_matrices(self, automata) -> dict:
         """
         Service function for building boolean matrices.
-
         :param automata: Origin automaton
         :return: Dict of boolean matrices
         """
@@ -78,7 +77,6 @@ class BooleanDecomposition:
     def intersection(self, other):
         """
         Intersect two automaton using kronecker product.
-
         :param other: Right operand of kronecker product
         :return: Resulting automaton as BooleanDecomposition
         """
@@ -183,7 +181,6 @@ class BooleanDecomposition:
     def constraint_bfs(self, constraint: "BooleanDecomposition", separated: bool):
         """
         Traverse presented graph via BFS with matrix operations and with constraint.
-
         :param constraint: constraint regular expression.
         :param separated: True if you want to get final vertices for every start vertex, False --- to get set of final
                 vertices reachable from set of start vertices.
