@@ -49,7 +49,6 @@ def rpq_bfs(
 ):
     """
     The function of performing regular queries to graph.
-
     :param regex: constraint regular expression
     :param graph: origin graph
     :param start_nodes: set of start nodes
