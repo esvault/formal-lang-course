@@ -50,12 +50,11 @@ class BooleanDecomposition:
                     from_index = self.indexed_states[from_state]
                     to_index = self.indexed_states[to_state]
                     if symbol not in matrices:
-                        matrices[symbol] = \
-                            BooleanDecomposition.matrix_converter(
-                                sparse.csr_matrix(
-                                    (self.num_of_states, self.num_of_states), dtype=bool
-                                )
+                        matrices[symbol] = BooleanDecomposition.matrix_converter(
+                            sparse.csr_matrix(
+                                (self.num_of_states, self.num_of_states), dtype=bool
                             )
+                        )
                     matrices[symbol][from_index, to_index] = True
 
         return matrices
@@ -91,13 +90,11 @@ class BooleanDecomposition:
         symbols = self.boolean_matrices.keys() & other.boolean_matrices.keys()
 
         for symbol in symbols:
-            result.boolean_matrices[symbol] = \
-                BooleanDecomposition.matrix_converter(
-                    sparse.kron(
-                        self.boolean_matrices[symbol],
-                        other.boolean_matrices[symbol]
-                    )
+            result.boolean_matrices[symbol] = BooleanDecomposition.matrix_converter(
+                sparse.kron(
+                    self.boolean_matrices[symbol], other.boolean_matrices[symbol]
                 )
+            )
 
         result.num_of_states = self.num_of_states * other.num_of_states
 
@@ -107,14 +104,14 @@ class BooleanDecomposition:
                 result.indexed_states[state] = state
 
                 if (
-                        left_state in self.start_states
-                        and right_state in other.start_states
+                    left_state in self.start_states
+                    and right_state in other.start_states
                 ):
                     result.start_states.add(state)
 
                 if (
-                        left_state in self.final_states
-                        and right_state in other.final_states
+                    left_state in self.final_states
+                    and right_state in other.final_states
                 ):
                     result.final_states.add(state)
 
@@ -127,7 +124,9 @@ class BooleanDecomposition:
         """
 
         if len(self.boolean_matrices) == 0:
-            return BooleanDecomposition.matrix_converter(sparse.csr_matrix((0, 0), dtype=bool))
+            return BooleanDecomposition.matrix_converter(
+                sparse.csr_matrix((0, 0), dtype=bool)
+            )
         closure = sum(self.boolean_matrices.values())
 
         prev = closure.nnz
@@ -265,7 +264,7 @@ def _construct_front(graph: "BooleanDecomposition", constraint: "BooleanDecompos
 
 
 def _construct_sep_front(
-        graph: "BooleanDecomposition", constraint: "BooleanDecomposition"
+    graph: "BooleanDecomposition", constraint: "BooleanDecomposition"
 ):
     start_indexes = {
         i
@@ -280,7 +279,10 @@ def _construct_sep_front(
     else:
         return BooleanDecomposition.matrix_converter(
             csr_matrix(
-                (constraint.num_of_states, constraint.num_of_states + graph.num_of_states)
+                (
+                    constraint.num_of_states,
+                    constraint.num_of_states + graph.num_of_states,
+                )
             )
         )
 
@@ -296,7 +298,7 @@ def _transform_rows(front_part, constr_states_num: int):
                 row_shift = i // constr_states_num * constr_states_num
                 transformed_front_part[row_shift + j, j] = 1
                 transformed_front_part[
-                [row_shift + j], constr_states_num:
+                    [row_shift + j], constr_states_num:
                 ] += non_zero_row_right
 
     return BooleanDecomposition.matrix_converter(transformed_front_part)
