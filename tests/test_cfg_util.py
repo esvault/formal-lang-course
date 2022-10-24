@@ -7,17 +7,17 @@ import os
 def is_weak_form(cfg: CFG) -> bool:
     try:
         for prod in cfg.productions:
-            match len(prod.body):
-                case 0:
-                    assert True
-                case 1:
-                    assert isinstance(prod.body[0], Terminal)
-                case 2:
-                    assert isinstance(prod.body[0], Variable) and isinstance(
-                        prod.body[1], Variable
-                    )
-                case _:
-                    assert False
+            length = len(prod.body)
+            if length == 0:
+                assert True
+            elif length == 1:
+                assert isinstance(prod.body[0], Terminal)
+            elif length == 2:
+                assert isinstance(prod.body[0], Variable) and isinstance(
+                    prod.body[1], Variable
+                )
+            else:
+                assert False
     except AssertionError:
         return False
 
@@ -42,3 +42,20 @@ def test_cfg_from_file_in_weak_normal_form():
     cfg_normal_form = cfg_to_weak_normal_form(cfg)
 
     assert is_weak_form(cfg_normal_form)
+
+
+def test_cfg_contains_same_words():
+    word0 = [""]
+    word1 = ["a", "b"]
+    word2 = ["a", "a", "b"]
+
+    cfg = CFG.from_text(
+        """
+        S -> a S b | epsilon"""
+    )
+
+    cfg_normal_form = cfg_to_weak_normal_form(cfg)
+
+    assert cfg.contains(word0) == cfg_normal_form.contains(word0)
+    assert cfg.contains(word1) == cfg_normal_form.contains(word1)
+    assert cfg.contains(word2) == cfg_normal_form.contains(word2)
