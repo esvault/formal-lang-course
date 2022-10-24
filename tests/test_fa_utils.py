@@ -47,7 +47,8 @@ def test_kleene_star():
 
 def test_correct_converting():
     # filename = "correct.dot"
-    filename = os.path.join("assets", "correct.dot")
+    directory = os.path.join("tests", "assets")
+    filename = os.path.join(directory, "correct.dot")
     dot = pydot.graph_from_dot_file(filename)[0]
     g = nx.drawing.nx_pydot.from_pydot(dot)
     automata = graph_to_epsilon_nfa(g)

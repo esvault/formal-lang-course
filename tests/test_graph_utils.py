@@ -21,7 +21,8 @@ def teardown_module(module):
 
 def test_two_cycles_graph_to_file1():
     """Check that after saving graph isn't changed"""
-    filename = os.path.join("assets", "test.dot")
+    directory = os.path.join("tests", "assets")
+    filename = os.path.join(directory, "test.dot")
 
     save_graph_to_file(generate_two_cycles_graph(10, 14, ("H", "M")), filename)
 
@@ -33,12 +34,14 @@ def test_two_cycles_graph_to_file1():
 
 
 def test_two_cycles_graph_to_file2():
-    filename = os.path.join("assets", "test.dot")
+    directory = os.path.join("tests", "assets")
+    filename = os.path.join(directory, "test.dot")
 
     save_graph_to_file(generate_two_cycles_graph(3, 2, ("A", "C")), filename)
 
     try:
-        assert filecmp.cmp(filename, os.path.join("assets", "correct.dot"))
+        directory = os.path.join("tests", "assets")
+        assert filecmp.cmp(filename, os.path.join(directory, "correct.dot"))
     except AssertionError:
         return
     finally:

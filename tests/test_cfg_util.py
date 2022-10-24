@@ -36,7 +36,8 @@ def test_cfg_in_weak_normal_form():
 
 
 def test_cfg_from_file_in_weak_normal_form():
-    path = os.path.join("assets", "test_cfg.txt")
+    directory = os.path.join("tests", "assets")
+    path = os.path.join(directory, "test_cfg.txt")
     cfg = get_cfg_from_file(path)
 
     cfg_normal_form = cfg_to_weak_normal_form(cfg)
