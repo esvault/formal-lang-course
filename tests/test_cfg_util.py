@@ -13,7 +13,9 @@ def is_weak_form(cfg: CFG) -> bool:
                 case 1:
                     assert isinstance(prod.body[0], Terminal)
                 case 2:
-                    assert isinstance(prod.body[0], Variable) and isinstance(prod.body[1], Variable)
+                    assert isinstance(prod.body[0], Variable) and isinstance(
+                        prod.body[1], Variable
+                    )
                 case _:
                     assert False
     except AssertionError:
@@ -23,8 +25,10 @@ def is_weak_form(cfg: CFG) -> bool:
 
 
 def test_cfg_in_weak_normal_form():
-    cfg = CFG.from_text("""
-        S -> a S b | epsilon""")
+    cfg = CFG.from_text(
+        """
+        S -> a S b | epsilon"""
+    )
 
     cfg_normal_form = cfg_to_weak_normal_form(cfg)
 
