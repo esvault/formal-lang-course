@@ -1,11 +1,15 @@
 antlr4-python3-runtime
 black
 cfpq-data
+matplotlib
 
 networkx~=2.6.2
-pre-commit
-pydot~=1.4.2
 
+numpy~=1.23.4
+pre-commit
+prettytable
+pydot~=1.4.2
 pyformlang~=0.1.26
 pytest~=7.1.3
-scipy
+scipy~=1.9.2
+tqdm

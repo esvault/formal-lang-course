@@ -31,6 +31,8 @@ class BooleanDecomposition:
             self.indexed_states = dict()
             self.boolean_matrices = dict()
 
+    matrix_converter = lambda mat: mat.tocsr()
+
     def _get_boolean_matrices(self, automata) -> dict:
         """
         Service function for building boolean matrices.
@@ -48,8 +50,10 @@ class BooleanDecomposition:
                     from_index = self.indexed_states[from_state]
                     to_index = self.indexed_states[to_state]
                     if symbol not in matrices:
-                        matrices[symbol] = sparse.csr_matrix(
-                            (self.num_of_states, self.num_of_states), dtype=bool
+                        matrices[symbol] = BooleanDecomposition.matrix_converter(
+                            sparse.csr_matrix(
+                                (self.num_of_states, self.num_of_states), dtype=bool
+                            )
                         )
                     matrices[symbol][from_index, to_index] = True
 
@@ -86,10 +90,10 @@ class BooleanDecomposition:
         symbols = self.boolean_matrices.keys() & other.boolean_matrices.keys()
 
         for symbol in symbols:
-            result.boolean_matrices[symbol] = sparse.kron(
-                self.boolean_matrices[symbol],
-                other.boolean_matrices[symbol],
-                format="csr",
+            result.boolean_matrices[symbol] = BooleanDecomposition.matrix_converter(
+                sparse.kron(
+                    self.boolean_matrices[symbol], other.boolean_matrices[symbol]
+                )
             )
 
         result.num_of_states = self.num_of_states * other.num_of_states
@@ -120,7 +124,9 @@ class BooleanDecomposition:
         """
 
         if len(self.boolean_matrices) == 0:
-            return sparse.csr_matrix((0, 0), dtype=bool)
+            return BooleanDecomposition.matrix_converter(
+                sparse.csr_matrix((0, 0), dtype=bool)
+            )
         closure = sum(self.boolean_matrices.values())
 
         prev = closure.nnz
@@ -209,7 +215,7 @@ class BooleanDecomposition:
             else _construct_sep_front(self, constraint)
         )
 
-        visited = csr_matrix(front.shape)
+        visited = BooleanDecomposition.matrix_converter(csr_matrix(front.shape))
 
         while True:
             old_visited = visited.copy()
@@ -254,7 +260,7 @@ def _construct_front(graph: "BooleanDecomposition", constraint: "BooleanDecompos
         front[i, i] = True
         front[i, k:] = right_part_front
 
-    return front.tocsr()
+    return BooleanDecomposition.matrix_converter(front)
 
 
 def _construct_sep_front(
@@ -269,14 +275,19 @@ def _construct_sep_front(
     fronts = [_construct_front(graph, constraint) for i in start_indexes]
 
     if len(fronts) > 0:
-        return csr_matrix(vstack(fronts))
+        return BooleanDecomposition.matrix_converter(csr_matrix(vstack(fronts)))
     else:
-        return csr_matrix(
-            (constraint.num_of_states, constraint.num_of_states + graph.num_of_states)
+        return BooleanDecomposition.matrix_converter(
+            csr_matrix(
+                (
+                    constraint.num_of_states,
+                    constraint.num_of_states + graph.num_of_states,
+                )
+            )
         )
 
 
-def _transform_rows(front_part: csr_matrix, constr_states_num: int):
+def _transform_rows(front_part, constr_states_num: int):
     transformed_front_part = lil_array(front_part.shape)
 
     for i, j in zip(*front_part.nonzero()):
@@ -290,4 +301,4 @@ def _transform_rows(front_part: csr_matrix, constr_states_num: int):
                     [row_shift + j], constr_states_num:
                 ] += non_zero_row_right
 
-    return transformed_front_part.tocsr()
+    return BooleanDecomposition.matrix_converter(transformed_front_part)

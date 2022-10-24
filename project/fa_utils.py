@@ -8,7 +8,6 @@ from networkx import MultiGraph
 def regex_to_dfa(regex: str) -> DeterministicFiniteAutomaton:
     """
     Transform regular expression to minimized Deterministic finite automaton.
-
     :param regex: original regular expression
     :return: minimized dfa
     """
@@ -25,7 +24,6 @@ def graph_to_epsilon_nfa(
 ) -> EpsilonNFA:
     """
     Transform the networkx graph to the Nondeterministic finite automation.
-
     :param graph: Original networkx graph
     :param start_states: Nodes of graph to be start in the result automation
     :param finale_states: Nodes of graph to be final in the result automation
