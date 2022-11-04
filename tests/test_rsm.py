@@ -13,6 +13,6 @@ def rsm_eq(actual: RSM, expected: RSM):
         assert automata.is_equivalent_to(expected.boxes[var])
 
 
-def test_rsm_eq():
+def test_rsm_from_ecfg():
     for i in range(len(actual_rsms)):
         rsm_eq(actual_rsms[i], expected_rsms[i])

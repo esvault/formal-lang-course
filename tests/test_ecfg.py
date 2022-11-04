@@ -1,3 +1,5 @@
+import os
+
 from pyformlang.cfg import Variable, Terminal, CFG
 from pyformlang.regular_expression import Regex
 
@@ -59,7 +61,7 @@ expected_ecfgs = [
 ]
 
 
-def cfg_eq(actual: ECFG, expected: ECFG):
+def ecfg_eq(actual: ECFG, expected: ECFG):
     assert actual.variables.__eq__(expected.variables)
     assert actual.terminals.__eq__(expected.terminals)
     assert actual.start_symbol.__eq__(expected.start_symbol)
@@ -71,6 +73,26 @@ def cfg_eq(actual: ECFG, expected: ECFG):
         assert actual_nfa.is_equivalent_to(expected_nfa)
 
 
-def test():
+def test_get_from_cfg():
     for i in range(len(cfgs)):
-        cfg_eq(actual_ecfgs[i], expected_ecfgs[i])
+        ecfg_eq(actual_ecfgs[i], expected_ecfgs[i])
+
+
+def test_read_from_file():
+    directory = os.path.join("tests", "assets")
+    file = os.path.join(directory, "test_ecfg.txt")
+
+    ecfg_expected = ECFG(
+        {Variable("S"), Variable("V"), Variable("M")},
+        {Terminal("a"), Terminal("b"), Terminal("c"), Terminal("d"), Terminal("m")},
+        Variable("S"),
+        {
+            Variable("S"): Regex("a.b.V | $"),
+            Variable("V"): Regex("$ | a.c.d | M"),
+            Variable("M"): Regex("m"),
+        },
+    )
+
+    ecfg_actual = ECFG.ecfg_from_file(file)
+
+    ecfg_eq(ecfg_actual, ecfg_expected)

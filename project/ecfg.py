@@ -31,3 +31,36 @@ class ECFG:
         return ECFG(
             set(cfg.variables), set(cfg.terminals), cfg.start_symbol, productions
         )
+
+    @classmethod
+    def ecfg_from_file(cls, file: str, start_symbol=Variable("S")):
+        with open(file) as f:
+            text = f.read()
+            return cls.ecfg_from_text(text, start_symbol)
+
+    @classmethod
+    def ecfg_from_text(cls, text: str, start_symbol=Variable("S")):
+        variables = set()
+        productions = dict()
+        terminals = set()
+
+        for line in text.strip().split("\n"):
+            if not line:
+                continue
+            cls._read_line(line, productions, terminals, variables)
+
+        return ECFG(variables, terminals, start_symbol, productions)
+
+    @classmethod
+    def _read_line(cls, line, productions, terminals, variables):
+        [head, body] = line.strip().split("->")
+
+        head = Variable(head.rstrip())
+
+        variables.add(head)
+
+        for sym in body:
+            if sym.islower():
+                terminals.add(Terminal(sym))
+
+        productions[Variable(head)] = Regex(body)
