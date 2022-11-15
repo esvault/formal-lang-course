@@ -1,7 +1,7 @@
 from pyformlang.cfg import CFG
 
 
-def cyk_contains(cfg: CFG, query: str):
+def cyk(cfg: CFG, query: str):
 
     if not query:
         return cfg.generate_epsilon()
