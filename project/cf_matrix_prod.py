@@ -7,11 +7,11 @@ from scipy.sparse import csr_matrix
 from project.cfg_util import cfg_to_weak_normal_form
 
 
-def cf_closure(graph: MultiGraph, cfg: CFG, matrix_type='csr'):
+def cf_closure(graph: MultiGraph, cfg: CFG, matrix_type="csr"):
     cfg = cfg_to_weak_normal_form(cfg)
 
     n = graph.number_of_nodes()
-    edges = graph.edges(data='label')
+    edges = graph.edges(data="label")
 
     eps_terms = set()
     term_prods = defaultdict(set)
