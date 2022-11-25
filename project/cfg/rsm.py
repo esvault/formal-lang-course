@@ -1,7 +1,7 @@
 from pyformlang.cfg import Variable
 from pyformlang.finite_automaton import EpsilonNFA
 
-from project.ecfg import ECFG
+from project.cfg.ecfg import ECFG
 
 
 class RSM:

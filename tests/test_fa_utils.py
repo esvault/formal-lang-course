@@ -2,11 +2,9 @@ import os
 
 import networkx as nx
 import pydot
-import pytest
 from pyformlang.finite_automaton import Symbol, State
-from pyformlang.regular_expression import Regex
 
-from project.fa_utils import *
+from project.re.fa_utils import *
 
 
 def test_equivalence_dfa_and_regex():

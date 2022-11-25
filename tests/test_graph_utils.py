@@ -2,8 +2,7 @@ import filecmp
 import os
 
 import pydot
-import pytest
-from project.graph import *  # on import will print something from __init__ filez
+from project.re.graph import *  # on import will print something from __init__ filez
 
 
 def setup_module(module):

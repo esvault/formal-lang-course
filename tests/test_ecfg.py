@@ -3,7 +3,7 @@ import os
 from pyformlang.cfg import Variable, Terminal, CFG
 from pyformlang.regular_expression import Regex
 
-from project.ecfg import ECFG
+from project.cfg.ecfg import ECFG
 
 cfgs = list(
     map(

@@ -1,7 +1,7 @@
 from networkx import MultiGraph
 from pyformlang.cfg import CFG
 
-from project.cfpq import cfpq
+from project.cfg.cfpq import cfpq
 
 cfgs = list(
     map(

@@ -1,5 +1,5 @@
 from tests.test_ecfg import actual_ecfgs, expected_ecfgs
-from project.rsm import RSM
+from project.cfg.rsm import RSM
 
 actual_rsms = list(map(lambda x: RSM.rsm_from_ecfg(x), actual_ecfgs))
 

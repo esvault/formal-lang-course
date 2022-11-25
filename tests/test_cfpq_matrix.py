@@ -1,7 +1,7 @@
 from networkx import MultiGraph
 from pyformlang.cfg import CFG
 
-from project.cfpq import cfpq_matrix
+from project.cfg.cfpq import cfpq, Algo
 
 cfgs = list(
     map(
@@ -27,4 +27,4 @@ results = [set(), {(0, 2), (0, 0), (1, 1), (2, 2)}]
 
 def test_cfpq():
     for i in range(1, len(cfgs)):
-        assert cfpq_matrix(graphs[i], cfgs[i]).__eq__(results[i])
+        assert cfpq(graphs[i], cfgs[i], algo=Algo.matrix_prod).__eq__(results[i])

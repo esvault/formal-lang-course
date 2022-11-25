@@ -1,11 +1,7 @@
-from typing import Optional, AbstractSet
-
 from networkx import MultiGraph
-from pyformlang.finite_automaton import State
-from pyformlang.regular_expression import Regex
 
-from project.boolean_decomposition import BooleanDecomposition
-from project.fa_utils import graph_to_epsilon_nfa, regex_to_dfa
+from project.re.boolean_decomposition import BooleanDecomposition
+from project.re.fa_utils import graph_to_epsilon_nfa, regex_to_dfa
 
 
 def request_path_query(

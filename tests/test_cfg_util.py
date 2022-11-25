@@ -1,5 +1,5 @@
 from pyformlang.cfg import CFG, Terminal, Variable
-from project.cfg_util import cfg_to_weak_normal_form, get_cfg_from_file
+from project.cfg.cfg_util import cfg_to_weak_normal_form, get_cfg_from_file
 
 import os
 

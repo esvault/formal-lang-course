@@ -1,6 +1,6 @@
 from pyformlang.cfg import CFG
 
-from project.cyk import cyk
+from project.cfg.cyk import cyk
 
 cfgs = list(
     map(
