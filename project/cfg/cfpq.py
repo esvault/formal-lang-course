@@ -25,6 +25,7 @@ def cfpq(
         final_nodes = graph.nodes
 
     result = set()
+
     for i, v, j in algo(cfg, graph):
         if v == start_symbol and i in start_nodes and j in final_nodes:
             result.add((i, j))
