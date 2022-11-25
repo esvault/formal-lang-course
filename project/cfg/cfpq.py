@@ -13,7 +13,7 @@ def cfpq(
     start_nodes: set = None,
     final_nodes: set = None,
     start_symbol: Variable = Variable("S"),
-    algo=Algo.hellings
+    algo=Algo.hellings,
 ):
 
     cfg._start_symbol = start_symbol
@@ -23,7 +23,6 @@ def cfpq(
 
     if not final_nodes:
         final_nodes = graph.nodes
-
 
     result = set()
     for i, v, j in algo(cfg, graph):
