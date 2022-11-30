@@ -3,12 +3,20 @@ from collections import defaultdict, deque
 
 from networkx import MultiGraph
 from pyformlang.cfg import Terminal, CFG
-from scipy.sparse import csr_matrix
+from pyformlang.finite_automaton import EpsilonNFA
+from scipy.sparse import csr_matrix, dok_matrix, eye
 
 from project.cfg.cfg_util import cfg_to_weak_normal_form
+from project.cfg.cf_bd import BooleanDecomposition
+from project.cfg.ecfg import ECFG
+from project.cfg.rsm import RSM
 
 
 def _hellings(cfg: CFG, graph: MultiGraph):
+    """
+    Solves the reachability problem via the Hellings algorithm
+    """
+
     weak_nfh = cfg_to_weak_normal_form(cfg)
     # N -> eps
     eps_non_terms = set()
@@ -58,6 +66,9 @@ def _hellings(cfg: CFG, graph: MultiGraph):
 
 
 def _cf_closure(cfg: CFG, graph: MultiGraph):
+    """
+    Solves the reachability problem via the matrix algorithm
+    """
     cfg = cfg_to_weak_normal_form(cfg)
 
     n = graph.number_of_nodes()
@@ -107,7 +118,58 @@ def _cf_closure(cfg: CFG, graph: MultiGraph):
     )
 
 
+def _tensor_prod(cfg: CFG, graph: MultiGraph):
+    """
+    Solves the reachability problem via the tensor algorithm
+    """
+
+    cfg_matrices = BooleanDecomposition.from_rsm(
+        RSM.rsm_from_ecfg(ECFG.ecfg_from_cfg(cfg))
+    )
+    cfg_indexed_states = {i: s for s, i in cfg_matrices.indexed_states.items()}
+
+    graph_matrices = BooleanDecomposition.from_automata(EpsilonNFA.from_networkx(graph))
+    graph_indexed_states = {i: s for s, i in graph_matrices.indexed_states.items()}
+    graph_states_num = len(graph_matrices.indexed_states)
+
+    for non_term in cfg.get_nullable_symbols():
+        for j in range(len(graph_matrices.indexed_states)):
+            graph_matrices.matrices[non_term.value][j, j] = True
+
+    tc_shape = len(cfg_indexed_states) * len(graph_indexed_states)
+    prev_tc = dok_matrix((tc_shape, tc_shape), dtype=bool)
+    while True:
+        intersection = cfg_matrices.intersect(graph_matrices)
+        tc = intersection.transitive_closure()
+
+        if prev_tc.nnz == tc.nnz:
+            break
+
+        prev_tc = tc
+        for i, j in list(zip(*tc.nonzero())):
+            cfg_i, cfg_j = i // graph_states_num, j // graph_states_num
+            graph_i, graph_j = (
+                i % graph_states_num,
+                j % graph_states_num,
+            )
+
+            state_from, state_to = cfg_indexed_states[cfg_i], cfg_indexed_states[cfg_j]
+            non_term, _ = state_from.value
+            if (
+                state_from in cfg_matrices.start_states
+                and state_to in cfg_matrices.final_states
+            ):
+                graph_matrices.matrices[non_term][graph_i, graph_j] = True
+
+    return {
+        (graph_indexed_states[graph_i], non_term, graph_indexed_states[graph_j])
+        for non_term, matrix in graph_matrices.matrices.items()
+        for graph_i, graph_j in zip(*matrix.nonzero())
+    }
+
+
 class Algo(enum.Enum):
 
     hellings = _hellings
     matrix_prod = _cf_closure
+    tensor_prod = _tensor_prod

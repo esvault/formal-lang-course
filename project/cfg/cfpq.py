@@ -15,6 +15,9 @@ def cfpq(
     start_symbol: Variable = Variable("S"),
     algo=Algo.hellings,
 ):
+    """
+    Find reachable nodes in graph with context free constraints
+    """
 
     cfg._start_symbol = start_symbol
 

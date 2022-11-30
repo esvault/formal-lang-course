@@ -1,7 +1,7 @@
 from networkx import MultiGraph
 
-from project.re.boolean_decomposition import BooleanDecomposition
-from project.re.fa_utils import graph_to_epsilon_nfa, regex_to_dfa
+from project.reg_ex.boolean_decomposition import BooleanDecomposition
+from project.reg_ex.fa_utils import graph_to_epsilon_nfa, regex_to_dfa
 
 
 def request_path_query(

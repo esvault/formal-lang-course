@@ -4,7 +4,7 @@ import networkx as nx
 import pydot
 from pyformlang.finite_automaton import Symbol, State
 
-from project.re.fa_utils import *
+from project.reg_ex.fa_utils import *
 
 
 def test_equivalence_dfa_and_regex():

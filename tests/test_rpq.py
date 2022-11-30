@@ -1,7 +1,7 @@
 from networkx import MultiGraph
 from pyformlang.finite_automaton import State
 
-from project.re.rpq import request_path_query, rpq_bfs
+from project.reg_ex.rpq import request_path_query, rpq_bfs
 
 
 def generate_graph():

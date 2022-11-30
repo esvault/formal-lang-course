@@ -3,6 +3,10 @@ from pyformlang.regular_expression import Regex
 
 
 class ECFG:
+    """
+    This class is representation of context free grammar as ECFG
+    """
+
     def __init__(
         self,
         variables: set[Variable],
@@ -17,6 +21,10 @@ class ECFG:
 
     @classmethod
     def ecfg_from_cfg(cls, cfg: CFG):
+        """
+        Transform context free grammar to ECFG
+        """
+
         productions = {}
         for p in cfg.productions:
             body = Regex(
@@ -34,12 +42,18 @@ class ECFG:
 
     @classmethod
     def ecfg_from_file(cls, file: str, start_symbol=Variable("S")):
+        """
+        Read ECFG from file
+        """
         with open(file) as f:
             text = f.read()
             return cls.ecfg_from_text(text, start_symbol)
 
     @classmethod
     def ecfg_from_text(cls, text: str, start_symbol=Variable("S")):
+        """
+        Read ECFG from string
+        """
         variables = set()
         productions = dict()
         terminals = set()
