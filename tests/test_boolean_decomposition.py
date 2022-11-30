@@ -2,7 +2,7 @@ import numpy as np
 from scipy import sparse
 from pyformlang.finite_automaton import NondeterministicFiniteAutomaton, State, Symbol
 
-from project.re.boolean_decomposition import BooleanDecomposition
+from project.reg_ex.boolean_decomposition import BooleanDecomposition
 
 
 def dicts_equal(d1: dict, d2: dict):
