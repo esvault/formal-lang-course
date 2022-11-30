@@ -7,6 +7,10 @@ from project.cfg.rsm import RSM
 
 
 class BooleanDecomposition:
+    """
+    This class is representation of context free grammar as set of boolean matrices.
+    """
+
     def __init__(self, indexed_states, start_states, final_states, matrices):
         self.indexed_states = indexed_states
         self.start_states = start_states
@@ -14,7 +18,11 @@ class BooleanDecomposition:
         self.matrices = matrices
 
     @classmethod
-    def from_rsm(cls, rsm: RSM):
+    def from_rsm(cls, rsm: RSM) -> "BooleanDecomposition":
+        """
+        Transform rsm to boolean matrices
+        """
+
         states, start_states, final_states = set(), set(), set()
 
         for n, automata in rsm.boxes.items():
@@ -46,7 +54,11 @@ class BooleanDecomposition:
         return cls(indexed_states, start_states, final_states, matrices)
 
     @classmethod
-    def from_automata(cls, automata: EpsilonNFA):
+    def from_automata(cls, automata: EpsilonNFA) -> "BooleanDecomposition":
+        """
+        Transform EpsilonNFA to boolean matrices
+        """
+
         indexed_states = {state: index for index, state in enumerate(automata.states)}
 
         matrices = defaultdict(
@@ -73,7 +85,10 @@ class BooleanDecomposition:
             matrices,
         )
 
-    def intersect(self, other: "BooleanDecomposition"):
+    def intersect(self, other: "BooleanDecomposition") -> "BooleanDecomposition":
+        """
+        Evaluate tensor production of two boolean decompositions
+        """
         n_matrices = {
             label: kron(self.matrices[label], other.matrices[label])
             for label in (self.matrices.keys() & other.matrices.keys())
@@ -103,7 +118,10 @@ class BooleanDecomposition:
             n_indexed_states, n_start_states, n_final_states, n_matrices
         )
 
-    def transitive_closure(self):
+    def transitive_closure(self) -> "BooleanDecomposition":
+        """
+        Evaluate transitive closure of boolean decomposition
+        """
         transitive_closure = sum(
             self.matrices.values(),
             start=dok_matrix((len(self.indexed_states), len(self.indexed_states))),

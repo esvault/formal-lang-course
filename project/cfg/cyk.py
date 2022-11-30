@@ -1,7 +1,10 @@
 from pyformlang.cfg import CFG
 
 
-def cyk(cfg: CFG, query: str):
+def cyk(cfg: CFG, query: str) -> bool:
+    """
+    Solves the problem of belonging of a word to grammar via CYK algorithm
+    """
 
     if not query:
         return cfg.generate_epsilon()

@@ -13,6 +13,10 @@ from project.cfg.rsm import RSM
 
 
 def _hellings(cfg: CFG, graph: MultiGraph):
+    """
+    Solves the reachability problem via the Hellings algorithm
+    """
+
     weak_nfh = cfg_to_weak_normal_form(cfg)
     # N -> eps
     eps_non_terms = set()
@@ -62,6 +66,9 @@ def _hellings(cfg: CFG, graph: MultiGraph):
 
 
 def _cf_closure(cfg: CFG, graph: MultiGraph):
+    """
+    Solves the reachability problem via the matrix algorithm
+    """
     cfg = cfg_to_weak_normal_form(cfg)
 
     n = graph.number_of_nodes()
@@ -112,6 +119,10 @@ def _cf_closure(cfg: CFG, graph: MultiGraph):
 
 
 def _tensor_prod(cfg: CFG, graph: MultiGraph):
+    """
+    Solves the reachability problem via the tensor algorithm
+    """
+
     cfg_matrices = BooleanDecomposition.from_rsm(
         RSM.rsm_from_ecfg(ECFG.ecfg_from_cfg(cfg))
     )
